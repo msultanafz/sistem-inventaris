@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
+/**
+ * @property-read \App\Models\Organization|null $organization
+ * @method bool isSuperAdmin()
+ * @method bool isOrganizationAdmin()
+ */
 
 class User extends Authenticatable
 {
@@ -21,7 +27,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // TAMBAHKAN BARIS INI
+        'organization_id', // TAMBAHKAN BARIS INI
     ];
 
     /**
@@ -43,4 +49,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the organization that the user belongs to.
+     */
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    /**
+     * Check if the user is a Super Admin (has no organization_id).
+     */
+    public function isSuperAdmin()
+    {
+        return is_null($this->organization_id);
+    }
+
+    /**
+     * Check if the user is an Organization Admin (has an organization_id).
+     */
+    public function isOrganizationAdmin()
+    {
+        return !is_null($this->organization_id);
+    }
 }

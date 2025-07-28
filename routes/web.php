@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InventoryItemController; // PASTIKAN INI DIIMPOR
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,19 @@ Route::middleware(['auth'])->group(function () {
 
     // Routes untuk Manajemen Pengguna (Admin)
     Route::resource('users', UserController::class);
+
+    // Rute untuk impersonasi/login sebagai admin organisasi
+    // PENTING: Rute leaveImpersonation HARUS di atas rute impersonate/{user}
+    Route::post('/impersonate/leave', [App\Http\Controllers\UserController::class, 'leaveImpersonation'])->name('users.leaveImpersonation');
+    Route::post('/impersonate/{user}', [App\Http\Controllers\UserController::class, 'impersonate'])->name('users.impersonate');
+
+    // Rute baru untuk Barang Terbaru (HARUS DI ATAS resource route)
+    Route::get('/inventory_items/recent', [InventoryItemController::class, 'recentItems'])->name('inventory_items.recent');
+
+    // START: Rute untuk Manajemen Inventaris Barang
+    Route::resource('inventory_items', InventoryItemController::class);
+    // END: Rute untuk Manajemen Inventaris Barang
+
 });
 
 Route::post('/logout', function (Request $request) {

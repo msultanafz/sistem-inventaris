@@ -11,9 +11,9 @@
                 </svg>
                 <span>Edit Admin: {{ $user->name }}</span>
             </h1>
-            {{-- Tombol "Kembali" bisa ditambahkan di sini jika diinginkan, seperti di create.blade.php --}}
+            {{-- Tombol "Kembali" --}}
             <a href="{{ route('users.index') }}" class="cancel-button-gradient text-white font-semibold py-2 px-5 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5 flex items-center space-x-2 text-sm sm:text-base">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 <span>Kembali</span>
@@ -37,6 +37,24 @@
                     <p class="text-red-500 text-xs italic mt-1 sm:mt-2">{{ $message }}</p>
                 @enderror
             </div>
+
+            {{-- START: Tambahan Field Organisasi --}}
+            <div class="mb-4 sm:mb-5">
+                <label for="organization_id" class="block text-gray-700 text-sm font-bold mb-1 sm:mb-2">Organisasi:</label>
+                <select name="organization_id" id="organization_id" class="shadow appearance-none border rounded w-full py-2 px-3 sm:py-3 sm:px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500 @error('organization_id') border-red-500 @enderror">
+                    <option value="">-- Pilih Organisasi (Kosongkan untuk Super Admin) --</option>
+                    @foreach($organizations as $org)
+                        <option value="{{ $org->id }}" {{ (old('organization_id', $user->organization_id) == $org->id) ? 'selected' : '' }}>
+                            {{ $org->name }} ({{ $org->code }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('organization_id')
+                    <p class="text-red-500 text-xs italic mt-1 sm:mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+            {{-- END: Tambahan Field Organisasi --}}
+
             <div class="mb-4 sm:mb-5">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-1 sm:mb-2">Password (isi jika ingin mengubah):</label>
                 <input type="password" name="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 sm:py-3 sm:px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500 @error('password') border-red-500 @enderror">

@@ -3,7 +3,6 @@
 @section('title', 'Manajemen Organisasi - ' . config('app.name', 'Laravel'))
 
 @section('content')
-    {{-- Hapus class "flex-1 p-8 bg-gray-50" dari div ini. Itu sudah di handle oleh layouts/app.blade.php --}}
     <div x-data="{ showDeleteModal: false, deleteUrl: '', deleteName: '' }">
         <div class="bg-white rounded-xl card-shadow p-6 sm:p-8 border border-gray-100"> {{-- Padding responsif --}}
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 pb-4 border-b border-gray-200"> {{-- Tata letak responsif untuk header --}}
@@ -20,10 +19,6 @@
                     <span>Tambah Organisasi</span>
                 </a>
             </div>
-
-            {{-- HAPUS BLOK NOTIFIKASI SUKSES DAN ERROR DI SINI --}}
-            {{-- Karena sudah di handle di layouts/app.blade.php --}}
-
 
             @if($organizations->isEmpty())
                 <div class="bg-blue-50 border border-blue-200 text-blue-800 px-6 py-10 sm:px-8 sm:py-12 rounded-xl text-center card-shadow"> {{-- Padding responsif --}}
@@ -68,6 +63,27 @@
                                 </td>
                                 <td class="px-4 py-4 sm:px-6 sm:py-5 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex items-center justify-center space-x-2 sm:space-x-3"> {{-- Jarak tombol responsif --}}
+                                        
+                                        {{-- Tombol "Masuk sebagai Admin" --}}
+                                        {{-- Hanya tampilkan jika organisasi ini memiliki setidaknya satu admin --}}
+                                        @if($organization->users->whereNotNull('organization_id')->isNotEmpty())
+                                            <form action="{{ route('users.impersonate', $organization->users->whereNotNull('organization_id')->first()->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class=" cursor-pointer inline-flex items-center p-1 sm:p-2 rounded-full text-white bg-purple-500 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out" title="Masuk sebagai Admin">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @else
+                                            {{-- Opsional: Tampilkan tombol non-aktif atau pesan jika tidak ada admin --}}
+                                            <button type="button" class="inline-flex items-center p-1 sm:p-2 rounded-full text-white bg-gray-400 cursor-not-allowed" title="Tidak ada Admin untuk login">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                                </svg>
+                                            </button>
+                                        @endif
+
                                         <a href="{{ route('organizations.show', $organization->id) }}" class="inline-flex items-center p-1 sm:p-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out" title="Lihat Detail"> {{-- Padding tombol responsif --}}
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> {{-- Ukuran ikon responsif --}}
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
