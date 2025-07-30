@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\InventoryItem;
+use App\Models\Borrowing; // Import model Borrowing
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -32,12 +33,11 @@ class DashboardController extends Controller
                 // Statistik ringkasan inventaris untuk organisasi ini
                 $dashboardData['totalItems'] = InventoryItem::where('organization_id', $organization->id)->count();
                 
-                // Placeholder untuk Barang Dipinjam (hanya jumlah)
-                $dashboardData['borrowedItemsCount'] = 0; // Contoh placeholder
+                // Mengambil jumlah barang yang sedang dipinjam
+                $dashboardData['borrowedItemsCount'] = Borrowing::where('organization_id', $organization->id)
+                                                                ->whereIn('status', ['borrowed', 'overdue'])
+                                                                ->count();
                 
-                // Data itemsByCondition dan recentItems tidak lagi diambil di sini
-                // karena kartu dashboard hanya akan menjadi link atau menampilkan ringkasan sederhana.
-
             } else {
                 $dashboardTitle = 'Dashboard Admin Organisasi';
                 $dashboardData['totalItems'] = 0;

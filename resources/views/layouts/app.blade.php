@@ -8,6 +8,8 @@
 
     <title>@yield('title', config('app.name', 'Laravel'))</title>
 
+    <link rel="shortcut icon" href="{{ asset('images/Inventory_favicon.png') }}" type="image/x-icon">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +23,7 @@
         }
 
         .nav-gradient {
-            background: linear-gradient(to right, #4c51bf, #667eea);
+            background-color: #1a202c;
         }
 
         .sidebar-bg {
@@ -45,7 +47,7 @@
 <body class="antialiased min-h-screen flex flex-col">
 
     {{-- Navbar --}}
-    <nav class="nav-gradient text-white p-4 sm:p-5 shadow-lg">
+    <nav class="nav-gradient rounded-br-[4rem] text-white p-4 sm:p-5 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center">
                 {{-- Tombol Hamburger hanya muncul di mobile --}}
@@ -70,33 +72,31 @@
             <div class="flex items-center space-x-3 sm:space-x-4">
                 {{-- Tampilkan tombol "Kembali ke Super Admin" jika sedang impersonasi --}}
                 @if(session()->has('impersonator_id'))
-                    <form method="POST" action="{{ route('users.leaveImpersonation') }}">
-                        @csrf
-                        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-1.5 px-4 sm:py-2 sm:px-5 rounded-md transition duration-300 ease-in-out text-sm sm:text-base flex items-center space-x-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0M3 12l-3 3" />
-                            </svg>
-                            <span>Kembali ke Super Admin</span>
-                        </button>
-                    </form>
+                <form method="POST" action="{{ route('users.leaveImpersonation') }}">
+                    @csrf
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1.5 px-4 sm:py-2 sm:px-5 rounded-md transition duration-300 ease-in-out text-sm sm:text-base flex items-center space-x-1">
+                        <span>Kembali ke Super Admin</span>
+                    </button>
+                </form>
                 @endif
 
                 <span class="text-sm sm:text-lg font-medium">Halo, {{ Auth::user()->name ?? 'Pengguna' }}!</span>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
-                        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1.5 px-4 sm:py-2 sm:px-5 rounded-md transition duration-300 ease-in-out text-sm sm:text-base">
+                        class="mr-8 bg-red-500 hover:bg-red-600 text-white font-semibold py-1.5 px-4 sm:py-2 sm:px-5 rounded-md transition duration-300 ease-in-out text-sm sm:text-base">
                         Logout
                     </button>
                 </form>
             </div>
         </div>
     </nav>
+    <hr class="border-white">
 
     <div class="flex flex-1">
         {{-- Sidebar --}}
         <aside id="sidebar"
-            class="fixed inset-y-0 left-0 z-40 w-64 sidebar-bg text-gray-200 p-4 sm:p-6 shadow-xl flex flex-col justify-between transform -translate-x-full lg:translate-x-0 lg:relative lg:flex lg:flex-col transition-transform duration-300 ease-in-out">
+            class="fixed rounded-br-[5rem] inset-y-0 left-0 z-40 w-64 sidebar-bg text-gray-200 p-4 sm:p-6 shadow-xl flex flex-col justify-between transform -translate-x-full lg:translate-x-0 lg:relative lg:flex lg:flex-col transition-transform duration-300 ease-in-out">
             <nav>
                 <ul>
                     <li class="mb-3">
@@ -113,73 +113,88 @@
                             <span class="font-medium">Dashboard</span>
                         </a>
                     </li>
-                    
+
                     {{-- Tampilkan menu untuk Super Admin --}}
                     @if(Auth::check() && Auth::user()->isSuperAdmin())
-                        <li class="mb-3">
-                            <a href="{{ route('organizations.index') }}"
-                                class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
+                    <li class="mb-3">
+                        <a href="{{ route('organizations.index') }}"
+                            class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
                                 @if(Request::routeIs('organizations.*')) bg-indigo-700 text-white font-semibold shadow-sm border border-indigo-500 
                                 @else hover:bg-gray-700 transition duration-200 ease-in-out @endif flex items-center space-x-2.5 sm:space-x-3 group text-sm sm:text-base">
-                                <svg class="h-5 w-5 sm:h-6 sm:w-6 
+                            <svg class="h-5 w-5 sm:h-6 sm:w-6 
                                     @if(Request::routeIs('organizations.*')) text-white @else text-gray-400 group-hover:text-white @endif transition duration-200"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m8-10h1m-1 4h1m-1 4h1m-8 4v-4l2-2m0 0l2-2m-2 2l-2 2m2-2V7" />
-                                </svg>
-                                <span>Manajemen Organisasi</span>
-                            </a>
-                        </li>
-                        <li class="mb-3">
-                            <a href="{{ route('users.index') }}"
-                                class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m8-10h1m-1 4h1m-1 4h1m-8 4v-4l2-2m0 0l2-2m-2 2l-2 2m2-2V7" />
+                            </svg>
+                            <span>Manajemen Organisasi</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="{{ route('users.index') }}"
+                            class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
                                 @if(Request::routeIs('users.*')) bg-indigo-700 text-white font-semibold shadow-sm border border-indigo-500 
                                 @else hover:bg-gray-700 transition duration-200 ease-in-out @endif flex items-center space-x-2.5 sm:space-x-3 group text-sm sm:text-base">
-                                <svg class="h-5 w-5 sm:h-6 sm:w-6 
-                                    @if(Request::routeIs('users.*')) text-white @else text-gray-400 group-hover:text-white @endif transition duration-200"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2C3.518 15.363 8.368 12 14 12h3.356m7.138 0a.75.75 0 000 1.5H21a.75.75 0 000-1.5h-.862zm-.862-3.75h-.01M21 12v3.75h2.25V12h-2.25z" />
-                                </svg>
-                                <span class="font-medium">Manajemen Admin</span>
-                            </a>
-                        </li>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 sm:h-6 sm:w-6 
+     @if(Request::routeIs('users.*')) text-white @else text-gray-400 group-hover:text-white @endif transition duration-200"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-2.21 0-4 .79-4 2s1.79 2 4 2 4-.79 4-2-1.79-2-4-2zM12 2a10 10 0 100 20 10 10 0 000-20z" />
+
+                            </svg>
+                            <span class="font-medium">Manajemen Admin</span>
+                        </a>
+                    </li>
                     @endif
 
                     {{-- Tampilkan menu untuk Admin Organisasi --}}
                     @if(Auth::check() && Auth::user()->isOrganizationAdmin())
-                        <li class="mb-3">
-                            <a href="{{ route('inventory_items.index') }}"
-                                class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
+                    <li class="mb-3">
+                        <a href="{{ route('inventory_items.index') }}"
+                            class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
                                 @if(Request::routeIs('inventory_items.index') || Request::routeIs('inventory_items.create') || Request::routeIs('inventory_items.edit') || Request::routeIs('inventory_items.show')) bg-indigo-700 text-white font-semibold shadow-sm border border-indigo-500 
                                 @else hover:bg-gray-700 transition duration-200 ease-in-out @endif flex items-center space-x-2.5 sm:space-x-3 group text-sm sm:text-base">
-                                <svg class="h-5 w-5 sm:h-6 sm:w-6 
+                            <svg class="h-5 w-5 sm:h-6 sm:w-6 
                                     @if(Request::routeIs('inventory_items.index') || Request::routeIs('inventory_items.create') || Request::routeIs('inventory_items.edit') || Request::routeIs('inventory_items.show')) text-white @else text-gray-400 group-hover:text-white @endif transition duration-200"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                </svg>
-                                <span class="font-medium">Inventaris Barang</span>
-                            </a>
-                        </li>
-                        {{-- Menu Barang Terbaru (dipindahkan ke sini, di luar blok if Request::routeIs('inventory_items.*')) --}}
-                        <li class="mb-3">
-                            <a href="{{ route('inventory_items.recent') }}"
-                                class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            <span class="font-medium">Inventaris Barang</span>
+                        </a>
+                    </li>
+                    {{-- Menu Barang Terbaru (sebagai item terpisah) --}}
+                    <li class="mb-3">
+                        <a href="{{ route('inventory_items.recent') }}"
+                            class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
                                 @if(Request::routeIs('inventory_items.recent')) bg-indigo-700 text-white font-semibold shadow-sm border border-indigo-500 
                                 @else hover:bg-gray-700 transition duration-200 ease-in-out @endif flex items-center space-x-2.5 sm:space-x-3 group text-sm sm:text-base">
-                                <svg class="h-5 w-5 sm:h-6 sm:w-6 
+                            <svg class="h-5 w-5 sm:h-6 sm:w-6 
                                     @if(Request::routeIs('inventory_items.recent')) text-white @else text-gray-400 group-hover:text-white @endif transition duration-200"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span class="font-medium">Barang Terbaru</span>
-                            </a>
-                        </li>
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="font-medium">Barang Terbaru</span>
+                        </a>
+                    </li>
+                    {{-- Menu Transaksi Peminjaman (BARU) --}}
+                    <li class="mb-3">
+                        <a href="{{ route('borrowings.index') }}"
+                            class="block py-2.5 px-3 sm:py-3 sm:px-4 rounded-md 
+                                @if(Request::routeIs('borrowings.*')) bg-indigo-700 text-white font-semibold shadow-sm border border-indigo-500 
+                                @else hover:bg-gray-700 transition duration-200 ease-in-out @endif flex items-center space-x-2.5 sm:space-x-3 group text-sm sm:text-base">
+                            <svg class="h-5 w-5 sm:h-6 sm:w-6 
+                                    @if(Request::routeIs('borrowings.*')) text-white @else text-gray-400 group-hover:text-white @endif transition duration-200"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                            <span class="font-medium">Transaksi Peminjaman</span>
+                        </a>
+                    </li>
                     @endif
                 </ul>
             </nav>
             <div class="mt-8 text-xs text-gray-500">
-                <p>&copy; 2025 Inventaris Kampus</p>
+                <p>&copy; 2025 Sistem Inventaris</p>
                 <p>Version 1.0.0</p>
             </div>
         </aside>
@@ -189,7 +204,7 @@
 
         {{-- MAIN CONTENT --}}
         <main class="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 overflow-y-auto relative">
-            
+
             {{-- Notifikasi Error --}}
             @if (session('error'))
             <div
@@ -281,4 +296,5 @@
     </script>
 
 </body>
+
 </html>

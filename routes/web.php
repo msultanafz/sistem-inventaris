@@ -8,7 +8,8 @@ use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\InventoryItemController; // PASTIKAN INI DIIMPOR
+use App\Http\Controllers\InventoryItemController; 
+use App\Http\Controllers\BorrowingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,13 @@ Route::middleware(['auth'])->group(function () {
     // START: Rute untuk Manajemen Inventaris Barang
     Route::resource('inventory_items', InventoryItemController::class);
     // END: Rute untuk Manajemen Inventaris Barang
+
+    // Rute spesifik untuk Borrowing (HARUS DI ATAS resource route borrowings)
+    Route::get('/borrowings/history', [BorrowingController::class, 'history'])->name('borrowings.history');
+
+    // Borrowing Transactions (akses terbatas berdasarkan role dan organisasi)
+    // Ditempatkan setelah inventory_items karena sering berinteraksi dengannya
+    Route::resource('borrowings', BorrowingController::class);
 
 });
 

@@ -63,8 +63,8 @@
                     <p class="text-sm sm:text-base text-gray-600 mt-3">Kelola inventaris barang.</p>
                 </a>
 
-                {{-- Card untuk Barang Dipinjam (Hanya Jumlah) --}}
-                <a href="#" class="block p-5 sm:p-6 bg-orange-50 border border-orange-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                {{-- Card untuk Barang Dipinjam (Menampilkan Jumlah Aktual) --}}
+                <a href="{{ route('borrowings.index') }}" class="block p-5 sm:p-6 bg-orange-50 border border-orange-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                     <div class="flex items-center space-x-3 sm:space-x-4">
                         <div class="p-2 sm:p-3 bg-orange-200 rounded-full">
                             <svg class="h-7 w-7 sm:h-8 sm:w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

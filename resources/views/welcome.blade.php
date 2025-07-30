@@ -7,6 +7,9 @@
 
         <title>{{ config('app.name', 'Laravel') }} - Inventory Kampus</title>
 
+        {{-- Favicon (BARU) --}}
+        <link rel="shortcut icon" href="{{ asset('images/Inventory_favicon.png') }}" type="image/x-icon">
+
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -39,7 +42,7 @@
         </div>
 
         <div class="text-center mb-10 sm:mb-16 mt-14">
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 drop-shadow-lg leading-tight">Sistem Inventaris Kampus</h1>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 drop-shadow-lg leading-tight">Sistem Inventaris Barang</h1>
             <p class="text-lg sm:text-xl md:text-2xl text-gray-700 font-medium">Pilih organisasi Anda untuk mengelola inventaris.</p>
         </div>
 

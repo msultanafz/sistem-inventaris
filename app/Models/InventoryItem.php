@@ -62,4 +62,21 @@ class InventoryItem extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    /**
+     * Get the borrowings for the inventory item.
+     */
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
+
+    /**
+     * Check if the item is currently borrowed.
+     * An item is considered borrowed if there's any 'borrowed' status transaction for it.
+     */
+    public function isBorrowed()
+    {
+        return $this->borrowings()->where('status', 'borrowed')->exists();
+    }
 }
